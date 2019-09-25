@@ -45,9 +45,7 @@ public class Main {
             Delta.add(transition);
         }
 
-
         DeterministicFSM dFSM = new DeterministicFSM(Q, Sigma, Delta, Q0, F);
-
 
         Words words = new Words(Sigma);
 
