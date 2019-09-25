@@ -1,7 +1,10 @@
 package com.company;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -11,38 +14,45 @@ public class Main {
     private static String Q0;
     private static List<String> F = new ArrayList<>();
 
-    public static void main(String[] args) {
-        Q.add("q0");
-        Q.add("q1");
-        Q.add("q2");
-        Q.add("q3");
-        Q.add("q4");
+    public static void main(String[] args) throws FileNotFoundException {
 
-        Sigma.add('a');
-        Sigma.add('b');
-        Sigma.add('c');
-        Sigma.add('d');
+        FileReader fileReader = new FileReader("input");
+        Scanner scanner = new Scanner(fileReader);
 
-        Delta.add(new Transition("q0", 'a', "q1"));
-        Delta.add(new Transition("q1", 'c', "q1"));
-        Delta.add(new Transition("q0", 'b', "q2"));
-        Delta.add(new Transition("q2", 'b', "q2"));
-        Delta.add(new Transition("q2", 'a', "q4"));
-        Delta.add(new Transition("q1", 'b', "q3"));
-        Delta.add(new Transition("q3", 'b', "q4"));
-        Delta.add(new Transition("q3", 'a', "q4"));
-        Delta.add(new Transition("q3", 'd', "q4"));
+        String[] alphabet = scanner.nextLine().split("\\s+");
+        for (String letter: alphabet
+             ) {
+            Sigma.add(letter.charAt(0));
+        }
 
-        Q0 = "q0";
+        String[]states = scanner.nextLine().split("\\s+");
+        for (String state: states
+             ) {
+            Q.add(state);
+        }
 
-        F.add("q4");
+        Q0 = scanner.nextLine();
+
+        String[]finStates = scanner.nextLine().split("\\s+");
+        for (String finState: finStates
+             ) {
+            F.add(finState);
+        }
+
+        while(scanner.hasNextLine()){
+            String[]tr = scanner.nextLine().split("\\s+");
+            Transition transition = new Transition(tr[0], tr[1].charAt(0), tr[2]);
+            Delta.add(transition);
+        }
+
 
         DeterministicFSM dFSM = new DeterministicFSM(Q, Sigma, Delta, Q0, F);
+
 
         Words words = new Words(Sigma);
 
         StringBuilder sb = new StringBuilder();
-        for (int length = 1; length <= Sigma.size(); length++) {
+        for (int length = 1; length <= 10; length++) {
             sb.setLength(length);
             words.generate(sb, 0, dFSM);
         }
